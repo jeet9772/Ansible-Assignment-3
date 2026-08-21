@@ -1,1 +1,92 @@
+---
+- name: Setup Spring3HibernateApp
+  hosts: all
+  become: true
+
+  tasks:
+
+    - name: Install JDK 11
+      ansible.builtin.dnf:
+        name: java-11-openjdk-devel
+        state: present
+
+    - name: Install MySQL
+      ansible.builtin.dnf:
+        name: mysql-server
+        state: present
+
+    - name: Start and enable MySQL
+      ansible.builtin.service:
+        name: mysqld
+        state: started
+        enabled: true
+
+    - name: Install Maven and Git
+      ansible.builtin.dnf:
+        name:
+          - maven
+          - git
+        state: present
+
+    - name: Clone Spring3HibernateApp repository
+      ansible.builtin.git:
+        repo: https://github.com/opstree/spring3hibernate.git
+        dest: /opt/spring3hibernate
+        version: master
+
+    - name: Build Spring3HibernateApp WAR
+      ansible.builtin.shell:
+        cmd: mvn clean package
+        chdir: /opt/spring3hibernate
+      environment:
+        JAVA_HOME: /usr/lib/jvm/java-11-openjdk
+
+    - name: Create Tomcat directory
+      ansible.builtin.file:
+        path: /opt/tomcat
+        state: directory
+        mode: '0755'
+
+    - name: Download Tomcat 7.0.108
+      ansible.builtin.get_url:
+        url: https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.108/bin/apache-tomcat-7.0.108.tar.gz
+        dest: /tmp/apache-tomcat-7.0.108.tar.gz
+        mode: '0644'
+
+    - name: Extract Tomcat
+      ansible.builtin.unarchive:
+        src: /tmp/apache-tomcat-7.0.108.tar.gz
+        dest: /opt/tomcat
+        remote_src: true
+        creates: /opt/tomcat/apache-tomcat-7.0.108
+
+    - name: Configure Tomcat HTTP port
+      ansible.builtin.replace:
+        path: /opt/tomcat/apache-tomcat-7.0.108/conf/server.xml
+        regexp: '<Connector port="8080" protocol="HTTP/1.1"'
+        replace: '<Connector port="8081" protocol="HTTP/1.1"'
+
+    - name: Copy WAR file to Tomcat webapps
+      ansible.builtin.copy:
+        src: /opt/spring3hibernate/target/Spring3HibernateApp.war
+        dest: /opt/tomcat/apache-tomcat-7.0.108/webapps/Spring3HibernateApp.war
+        remote_src: true
+        mode: '0644'
+
+    - name: Create Tomcat systemd service
+      ansible.builtin.copy:
+        dest: /etc/systemd/system/tomcat.service
+        content: |
+          [Unit]
+          Description=Apache Tomcat 7
+          After=network.target
+
+          [Service]
+          Type=forking
+          Environment="JAVA_HOME=/usr/lib/jvm/java-11-openjdk"
+          Environment="CATALINA_HOME=/opt/tomcat/apache-tomcat-7.0.108"
+          Environment="CATALINA_BASE=/opt/tomcat/apache-tomcat-7.0.108"
+                                                                                                                                                                                                                                                                                                                                                 1,3           Top
+
+
 
