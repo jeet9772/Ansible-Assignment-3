@@ -1,102 +1,143 @@
-# Ansible Assignment - 3: Spring3HibernateApp Infrastructure Setup on AWS
+# Ansible Assignment - 3
+
+## Spring3HibernateApp Infrastructure Setup on AWS
 
 **Author:** Jeetendra Singh
 
-## Objective
+---
 
-The objective of this assignment is to provision and configure a complete application infrastructure on AWS using an Ansible playbook, and deploy the `Spring3HibernateApp` Java application on it in a fully automated manner. The playbook handles everything from installing dependencies to building the application and deploying it on Tomcat.
+## 📌 Objective
 
-## About the Application
+The objective of this assignment is to set up the required application infrastructure on an AWS EC2 instance using **Ansible** and deploy the **Spring3HibernateApp** Java application.
 
-**Repository:** https://github.com/opstree/spring3hibernate
+The complete deployment process is automated using an Ansible playbook, including:
 
-Spring3HibernateApp is a Java-based application built for various testing purposes, used here to demonstrate an end-to-end Java web application deployment pipeline using Spring, Hibernate, and MySQL.
+* Installing JDK 11
+* Installing MySQL
+* Installing Maven and Git
+* Cloning the Spring3HibernateApp repository
+* Creating the WAR file using Maven
+* Installing Apache Tomcat 7.0.108
+* Deploying the WAR file to Tomcat
+* Restarting the Tomcat service
+* Verifying that the application is running
 
-* **Website:** https://opstree.github.io
+---
 
-## Prerequisites
+## 📦 Application Information
 
-Before running this playbook, ensure the following are in place:
+**Application:** Spring3HibernateApp
 
-* An AWS EC2 instance provisioned and reachable via SSH
-* Ansible installed on the control node
-* SSH key-based access configured to the target host
-* The target host added to the Ansible inventory
-* `become` (sudo) privileges available for the Ansible user
-* Internet access on the target host
+**Repository:**
+https://github.com/opstree/spring3hibernate
 
-## Infrastructure & Tools Used
+**Website:**
+https://opstree.github.io
 
-| Component                | Version / Details     |
+Spring3HibernateApp is a Java-based application used for testing and demonstration purposes. It uses technologies such as **Spring, Hibernate, MySQL and Tomcat**.
+
+---
+
+## 🛠️ Infrastructure & Tools Used
+
+| Component                | Details               |
 | ------------------------ | --------------------- |
 | Cloud Provider           | AWS EC2               |
 | Configuration Management | Ansible               |
-| OS                       | Linux                 |
-| JDK                      | OpenJDK 11            |
+| Operating System         | Linux                 |
+| Java                     | OpenJDK 11            |
 | Build Tool               | Maven                 |
-| Database                 | MySQL Server          |
+| Database                 | MySQL                 |
 | Application Server       | Apache Tomcat 7.0.108 |
 | Source Control           | Git                   |
 
-## What the Playbook Does
+---
 
-The Ansible playbook automates the following steps:
+## 📋 Prerequisites
 
-1. **System preparation**
+Before running the playbook, make sure:
 
-   * Installs OpenJDK 11
-   * Installs Maven and Git
-   * Verifies Java installation
+* AWS EC2 instance is available
+* Ansible is installed on the control node
+* SSH connectivity is configured
+* SSH private key is available
+* Target server is added to the Ansible inventory
+* Ansible user has sudo privileges
+* Target server has internet connectivity
 
-2. **Database setup**
+---
 
-   * Installs MySQL Server
-   * Starts and enables the MySQL service
+# 🔄 Deployment Flow
 
-3. **Application build**
+```text
+AWS EC2 Instance
+       │
+       ▼
+Connection Verification
+       │
+       ▼
+Install JDK 11
+       │
+       ▼
+Install MySQL
+       │
+       ▼
+Install Maven & Git
+       │
+       ▼
+Clone Spring3HibernateApp
+       │
+       ▼
+Create WAR File using Maven
+       │
+       ▼
+Install Tomcat 7.0.108
+       │
+       ▼
+Deploy WAR File
+       │
+       ▼
+Restart Tomcat Service
+       │
+       ▼
+Application Running
+```
 
-   * Clones the `Spring3HibernateApp` repository from GitHub
-   * Builds the application using Maven
-   * Creates the WAR file
+---
 
-4. **Tomcat setup**
+# 📸 Task-wise Execution & Screenshots
 
-   * Downloads Apache Tomcat 7.0.108
-   * Extracts Tomcat to `/opt/tomcat`
-   * Creates the Tomcat systemd service
-   * Starts and enables the Tomcat service
+## 1. Connection Verification
 
-5. **Deployment**
-
-   * Copies the generated WAR file to:
-     `/opt/tomcat/apache-tomcat-7.0.108/webapps/`
-   * Restarts the Tomcat service
-   * Verifies that the application is running
-
-# Task-wise Execution & Screenshots
-
-Each task below corresponds to the required deployment steps. Add the actual screenshot below each placeholder.
-
-## Connection Verification
-
-Verify the connection between the Ansible control node and the AWS EC2 target server.
+First, Ansible connectivity with the AWS EC2 instance is verified using the following command:
 
 ```bash
 ansible all -m ping
 ```
 
-![Screenshot 2026-08-27 at 11 34 57 PM](https://github.com/user-attachments/assets/3d1f7471-5fac-437b-ad43-5eb8735a6fa9)
+Expected output:
 
+```text
+worker1 | SUCCESS => {
+    "changed": false,
+    "ping": "pong"
+}
+```
 
-**[Insert Connection Verification Screenshot Here]**
+### Screenshot
 
-`![Connection Verification](screenshots/connection-verification.png)`
+**Add your connection verification screenshot below:**
+
+<img width="1440" height="900" alt="Screenshot 2026-08-27 at 11 54 07 PM" src="https://github.com/user-attachments/assets/3e3b41eb-3e7e-4b3d-8bc5-c7c0f0c1e403" />
+
 
 ---
 
-## Task 1: Install JDK 11
+# 2. Task 1: Install JDK 11
 
-Install JDK 11 on the target EC2 instance.
+JDK 11 is installed on the target server because the Spring3HibernateApp is a Java-based application.
+
+Ansible task:
 
 ```yaml
 - name: Install JDK 11
@@ -105,29 +146,39 @@ Install JDK 11 on the target EC2 instance.
     state: present
 ```
 
-Verify the Java installation:
+Java installation can be verified using:
 
 ```bash
 java -version
+```
 
+Expected output will show Java 11.
 
-**[Insert Install JDK 11 Screenshot
+### Screenshot
 
-<img width="1440" height="900" alt="Screenshot 2026-08-27 at 11 44 37 PM" src="https://github.com/user-attachments/assets/fbb1ec7d-d930-49d2-a74b-2657b0644e2f" />
+**Add your JDK 11 installation screenshot below:**
+
+<img width="1440" height="900" alt="Screenshot 2026-08-27 at 11 44 37 PM" src="https://github.com/user-attachments/assets/750c6888-0251-4fb4-8f03-b6161ff75220" />
 
 
 ---
 
-## Task 2: Install MySQL
+# 3. Task 2: Install MySQL
 
-Install MySQL Server and ensure that the MySQL service is running.
+MySQL Server is installed on the target EC2 instance.
+
+Ansible task:
 
 ```yaml
 - name: Install MySQL
   ansible.builtin.dnf:
     name: mysql-server
     state: present
+```
 
+The MySQL service is then started and enabled:
+
+```yaml
 - name: Start and enable MySQL
   ansible.builtin.service:
     name: mysqld
@@ -135,7 +186,7 @@ Install MySQL Server and ensure that the MySQL service is running.
     enabled: true
 ```
 
-Verify MySQL:
+MySQL service can be verified using:
 
 ```bash
 systemctl status mysqld
@@ -143,44 +194,33 @@ systemctl status mysqld
 
 ### Screenshot
 
-**[Insert Install MySQL Screenshot Here]**
+**Add your MySQL installation screenshot below:**
 
-`![Install MySQL](screenshots/task2-mysql.png)`
+<img width="1440" height="900" alt="Screenshot 2026-08-27 at 11 57 34 PM" src="https://github.com/user-attachments/assets/8d075488-0ecb-403b-b248-b06def97fd7a" />
+
 
 ---
 
-## Task 3: Create the WAR File for Spring3HibernateApp Using Maven
+# 4. Task 3: Create the WAR File Using Maven
 
-First clone the application repository:
+The Spring3HibernateApp source code is cloned from GitHub.
 
-```yaml
-- name: Clone Spring3HibernateApp repository
-  ansible.builtin.git:
-    repo: https://github.com/opstree/spring3hibernate.git
-    dest: /opt/spring3hibernate
-    version: master
+Repository:
+
+```text
+https://github.com/opstree/spring3hibernate.git
 ```
 
-Install Maven and Git:
+The repository is cloned to:
 
-```yaml
-- name: Install Maven and Git
-  ansible.builtin.dnf:
-    name:
-      - maven
-      - git
-    state: present
+```text
+/opt/spring3hibernate
 ```
 
-Build the WAR file:
+Maven is then used to build the application:
 
-```yaml
-- name: Build Spring3HibernateApp WAR
-  ansible.builtin.shell:
-    cmd: mvn clean package
-    chdir: /opt/spring3hibernate
-  environment:
-    JAVA_HOME: /usr/lib/jvm/java-11-openjdk
+```bash
+mvn clean package
 ```
 
 The WAR file is generated inside:
@@ -189,7 +229,7 @@ The WAR file is generated inside:
 /opt/spring3hibernate/target/
 ```
 
-Verify:
+The generated WAR can be verified using:
 
 ```bash
 ls -lh /opt/spring3hibernate/target/
@@ -197,59 +237,64 @@ ls -lh /opt/spring3hibernate/target/
 
 ### Screenshot
 
-**[Insert Create WAR File Screenshot Here]**
+**Add your Maven WAR build screenshot below:**
 
-`![Build WAR with Maven](screenshots/task3-maven-war-build.png)`
+![Screenshot 2026-08-28 at 12 00 30 AM](https://github.com/user-attachments/assets/d2f5fbf2-fb8d-437e-a596-5ee5e54a97f1)
+
 
 ---
 
-## Task 4: Install Tomcat
+# 5. Task 4: Install Tomcat
 
-Download and install Apache Tomcat 7.0.108.
+Apache Tomcat **7.0.108** is downloaded and extracted on the target server.
 
-Tomcat installation path:
+Tomcat installation location:
 
 ```text
 /opt/tomcat/apache-tomcat-7.0.108
 ```
 
-Download URL:
+Tomcat archive:
 
 ```text
-https://archive.apache.org/dist/tomcat/tomcat-7/v7.0.108/bin/apache-tomcat-7.0.108.tar.gz
+apache-tomcat-7.0.108.tar.gz
 ```
 
-Create the Tomcat directory:
+Tomcat is configured as a systemd service so that it can be managed using:
 
-```yaml
-- name: Create Tomcat directory
-  ansible.builtin.file:
-    path: /opt/tomcat
-    state: directory
-    mode: '0755'
-```
-
-Extract Tomcat:
-
-```yaml
-- name: Extract Tomcat
-  ansible.builtin.unarchive:
-    src: /tmp/apache-tomcat-7.0.108.tar.gz
-    dest: /opt/tomcat
-    remote_src: true
+```bash
+systemctl start tomcat
+systemctl stop tomcat
+systemctl restart tomcat
+systemctl status tomcat
 ```
 
 ### Screenshot
 
-**[Insert Install Tomcat Screenshot Here]**
+**Add your Tomcat installation screenshot below:**
 
-`![Install Tomcat](screenshots/task4-install-tomcat.png)`
+<img width="1440" height="900" alt="Screenshot 2026-08-28 at 12 02 53 AM" src="https://github.com/user-attachments/assets/e74ffe72-8394-4a70-a668-1a0de81ed427" />
+
 
 ---
 
-## Task 5: Send the WAR File to `/opt/tomcat/apache-tomcat-7.0.108/webapps/`
+# 6. Task 5: Deploy WAR File to Tomcat
 
-Copy the generated WAR file into the Tomcat `webapps` directory.
+After the WAR file is successfully created using Maven, it is copied to the Tomcat `webapps` directory.
+
+Target location:
+
+```text
+/opt/tomcat/apache-tomcat-7.0.108/webapps/
+```
+
+The WAR file is deployed as:
+
+```text
+/opt/tomcat/apache-tomcat-7.0.108/webapps/Spring3HibernateApp.war
+```
+
+Example Ansible task:
 
 ```yaml
 - name: Copy WAR file to Tomcat webapps
@@ -260,188 +305,244 @@ Copy the generated WAR file into the Tomcat `webapps` directory.
     mode: '0644'
 ```
 
-Target location:
+WAR deployment can be verified using:
 
-```text
-/opt/tomcat/apache-tomcat-7.0.108/webapps/Spring3HibernateApp.war
+```bash
+ls -lh /opt/tomcat/apache-tomcat-7.0.108/webapps/
 ```
 
 ### Screenshot
 
-**[Insert WAR Deployment Screenshot Here]**
+**Add your WAR deployment screenshot below:**
 
-`![Copy WAR to webapps](screenshots/task5-deploy-war.png)`
+![Deploy WAR](screenshots/task5-deploy-war.png)
 
 ---
 
-## Task 6: Restart Tomcat Service
+# 7. Task 6: Restart Tomcat Service
 
-After deploying the WAR file, restart the Tomcat service.
+After deploying the WAR file, the Tomcat service is restarted so that Tomcat can load the application.
 
-```yaml
-- name: Restart Tomcat service
-  ansible.builtin.systemd:
-    name: tomcat
-    state: restarted
-    daemon_reload: true
+Command:
+
+```bash
+systemctl restart tomcat
 ```
 
-Verify Tomcat:
+Verify the Tomcat service:
 
 ```bash
 systemctl status tomcat
 ```
 
+The service should show:
+
+```text
+Active: active (running)
+```
+
 ### Screenshot
 
-**[Insert Restart Tomcat Screenshot Here]**
+**Add your Tomcat restart screenshot below:**
 
-`![Restart Tomcat Service](screenshots/task6-restart-tomcat.png)`
+![Restart Tomcat Service](screenshots/task6-restart-tomcat.png)
 
 ---
 
-# Final Output: Application Running
+# 8. Final Output: Application Running
 
-After successfully completing all tasks, verify that the Spring3HibernateApp is running.
+After successful deployment and Tomcat restart, the Spring3HibernateApp can be accessed through a web browser.
 
-If Tomcat is configured on port `8081`:
-
-```text
-http://<EC2-PUBLIC-IP>:8081/Spring3HibernateApp/
-```
-
-If Tomcat is running on the default port:
+Application URL:
 
 ```text
 http://<EC2-PUBLIC-IP>:8080/Spring3HibernateApp/
 ```
 
+Replace `<EC2-PUBLIC-IP>` with the public IP address of your AWS EC2 instance.
+
+The browser output confirms that the Spring3HibernateApp has been successfully deployed and is running.
+
 ### Screenshot
 
-**[Insert Final Application Running Screenshot Here]**
+**Add your final application running screenshot below:**
 
-`![Application Running](screenshots/final-output-app-running.png)`
+![Application Running](screenshots/final-output-app-running.png)
 
 ---
 
-# Playbook Structure
+# 📁 Project Structure
 
 ```text
-.
-├── spring3hibernate.yml       # Main Ansible playbook
-├── inventory                   # Ansible inventory file
-├── screenshots/                # Task-wise screenshots
-│   ├── connection-verification.png
-│   ├── task1-jdk11.png
-│   ├── task2-mysql.png
-│   ├── task3-maven-war-build.png
-│   ├── task4-install-tomcat.png
-│   ├── task5-deploy-war.png
-│   ├── task6-restart-tomcat.png
-│   └── final-output-app-running.png
-└── README.md
+Ansible-Assignment-3/
+│
+├── inventory
+├── spring3hibernate.yml
+├── README.md
+│
+└── screenshots/
+    ├── connection-verification.png
+    ├── task1-jdk11.png
+    ├── task2-mysql.png
+    ├── task3-maven-war-build.png
+    ├── task4-install-tomcat.png
+    ├── task5-deploy-war.png
+    ├── task6-restart-tomcat.png
+    └── final-output-app-running.png
 ```
 
-# Inventory Example
+---
+
+# 📝 Inventory Example
+
+Example Ansible inventory:
 
 ```ini
 [app]
 <EC2-PUBLIC-IP> ansible_user=ec2-user ansible_ssh_private_key_file=~/.ssh/your-key.pem
 ```
 
-# How to Run
+Replace the values according to your AWS EC2 configuration.
 
-1. Update the `inventory` file with your AWS EC2 instance details.
+---
 
-2. Verify Ansible connectivity:
+# ▶️ How to Run
+
+## Step 1: Verify Ansible Connectivity
 
 ```bash
 ansible all -m ping
 ```
 
-3. Run the playbook:
+---
+
+## Step 2: Check Playbook Syntax
+
+```bash
+ansible-playbook -i inventory spring3hibernate.yml --syntax-check
+```
+
+---
+
+## Step 3: Run the Playbook
 
 ```bash
 ansible-playbook -i inventory spring3hibernate.yml
 ```
 
-4. Verify the Tomcat service:
+---
 
-```bash
-systemctl status tomcat
-```
-
-5. Open the application in a browser:
-
-```text
-http://<EC2-PUBLIC-IP>:8081/Spring3HibernateApp/
-```
-
-# Verification
-
-The deployment can be verified using the following commands.
-
-### Verify Java
+## Step 4: Verify Java
 
 ```bash
 java -version
 ```
 
-### Verify Maven
+---
+
+## Step 5: Verify Maven
 
 ```bash
 mvn -version
 ```
 
-### Verify MySQL
+---
+
+## Step 6: Verify MySQL
 
 ```bash
 systemctl status mysqld
 ```
 
-### Verify Tomcat
+---
+
+## Step 7: Verify Tomcat
 
 ```bash
 systemctl status tomcat
 ```
 
-### Verify WAR File
+---
+
+## Step 8: Verify WAR Deployment
 
 ```bash
 ls -lh /opt/tomcat/apache-tomcat-7.0.108/webapps/
 ```
 
-### Verify Tomcat Port
+---
 
-```bash
-ss -tulnp | grep 8081
+# 🔍 Verification
+
+The following points confirm successful deployment:
+
+* JDK 11 is installed successfully.
+* MySQL Server is installed and running.
+* Maven and Git are installed.
+* Spring3HibernateApp repository is cloned successfully.
+* WAR file is created using Maven.
+* Apache Tomcat 7.0.108 is installed.
+* WAR file is copied to the Tomcat `webapps` directory.
+* Tomcat service is restarted successfully.
+* Spring3HibernateApp is accessible from the browser.
+
+---
+
+# ⚠️ AWS Security Group
+
+For browser access to the application, make sure the Tomcat port is allowed in the AWS EC2 Security Group.
+
+For example:
+
+```text
+Type: Custom TCP
+Port: 8080
+Source: Your IP / Required Network
 ```
 
-### View Tomcat Logs
+Then access:
 
-```bash
-tail -f /opt/tomcat/apache-tomcat-7.0.108/logs/catalina.out
+```text
+http://<EC2-PUBLIC-IP>:8080/Spring3HibernateApp/
 ```
 
-# Expected Result
+---
+
+# 🎯 Expected Result
 
 After successful execution of the Ansible playbook:
 
-* JDK 11 is installed.
-* MySQL is installed and running.
-* Maven and Git are installed.
-* Spring3HibernateApp repository is cloned.
-* WAR file is successfully created using Maven.
-* Tomcat 7.0.108 is installed.
-* WAR file is copied to the Tomcat `webapps` directory.
-* Tomcat service is restarted.
-* Spring3HibernateApp is successfully running.
+```text
+JDK 11 Installed
+       ↓
+MySQL Running
+       ↓
+Application WAR Created
+       ↓
+Tomcat Installed
+       ↓
+WAR Deployed
+       ↓
+Tomcat Restarted
+       ↓
+Spring3HibernateApp Running
+```
 
-# Conclusion
+---
 
-The complete Spring3HibernateApp infrastructure and deployment process is automated using Ansible on AWS EC2. This automation makes the deployment process faster, repeatable, and easier to manage.
+# ✅ Conclusion
 
-## Author
+The **Spring3HibernateApp** infrastructure and deployment process has been successfully automated using **Ansible on AWS EC2**.
+
+The playbook automates the complete deployment process, including Java installation, MySQL setup, Maven WAR creation, Tomcat installation, WAR deployment, Tomcat restart, and application verification.
+
+**Final Result:**
+The Spring3HibernateApp is successfully deployed and running on the AWS EC2 instance.
+
+---
+
+## 👨‍💻 Author
 
 **Jeetendra Singh**
 
+**Technology:** Ansible | AWS | Linux | Java | Maven | MySQL | Tomcat
