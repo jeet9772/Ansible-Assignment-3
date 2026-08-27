@@ -315,7 +315,8 @@ ls -lh /opt/tomcat/apache-tomcat-7.0.108/webapps/
 
 **Add your WAR deployment screenshot below:**
 
-![Deploy WAR](screenshots/task5-deploy-war.png)
+<img width="1440" height="900" alt="Screenshot 2026-08-28 at 12 05 52 AM" src="https://github.com/user-attachments/assets/6d760dea-9b89-4756-a7c9-97ccfe8b6fa7" />
+
 
 ---
 
@@ -345,7 +346,8 @@ Active: active (running)
 
 **Add your Tomcat restart screenshot below:**
 
-![Restart Tomcat Service](screenshots/task6-restart-tomcat.png)
+<img width="1440" height="900" alt="Screenshot 2026-08-28 at 12 07 19 AM" src="https://github.com/user-attachments/assets/4004389a-88fb-4def-9f1d-49674ae7440c" />
+
 
 ---
 
@@ -367,7 +369,8 @@ The browser output confirms that the Spring3HibernateApp has been successfully d
 
 **Add your final application running screenshot below:**
 
-![Application Running](screenshots/final-output-app-running.png)
+<img width="1440" height="900" alt="Screenshot 2026-08-28 at 12 13 22 AM" src="https://github.com/user-attachments/assets/f19918c0-a02f-404d-a16d-aa84b056dd2c" />
+
 
 ---
 
